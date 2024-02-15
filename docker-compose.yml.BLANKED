@@ -1,0 +1,19 @@
+version: "3"
+
+networks:
+  traefik_traefik-network:
+    external: true
+
+services:
+  recipes:
+    image: observable:latest
+    container_name: observable
+    build: .
+    networks:
+      - traefik_traefik-network
+    labels:
+      - traefik.http.routers.observable.rule=Host(`[[URL]]`)
+      - traefik.http.routers.observable.tls=true
+      - traefik.http.routers.observable.tls.certresolver=lets-encrypt
+      - traefik.http.services.observable.loadbalancer.server.port=3000
+      - traefik.port=[[TRAEFIK_PORT]]
